@@ -1,0 +1,24 @@
+{
+    "fmt": {
+        "files": {
+            "include": ["**/*.ts"]
+        },
+        "options": {
+            "lineWidth": 80,
+            "indentWidth": 2,
+            "singleQuote": true
+        }
+    },
+    "lint": {
+        "files": {
+            "include": ["**/*.ts"]
+        }
+    },
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "strict": true,
+        "strictNullChecks": true
+    }
+}
