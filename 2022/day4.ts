@@ -48,5 +48,5 @@ console.log(
 );
 
 console.log(
-  `2022-4-1: ${part2(puzzle)}`,
+  `2022-4-2: ${part2(puzzle)}`,
 );
