@@ -57,14 +57,30 @@ const part1 = (
 const part2 = (
   instructions: Array<Instruction>,
   boxes: Array<Array<string>>,
-): number => {
-  return 0;
+): string => {
+  const result = instructions.reduce(
+    (acc: Array<Array<string>>, instr: Instruction): Array<Array<string>> => {
+      const multipleBoxes = [];
+      for (let i = 0; i < instr.count; i++) {
+        multipleBoxes.push(acc[instr.from - 1].shift() ?? '');
+      }
+
+      multipleBoxes.concat([]);
+      acc[instr.to - 1] = multipleBoxes.concat(acc[instr.to - 1]);
+      return acc;
+    },
+    boxes,
+  );
+
+  return result.map((col) => col[0]).join('');
 };
+
+const rowsCopy = rows.map((col) => col.map((s) => s));
 
 console.log(
   `2022-5-1: ${part1(instructions, rows)}`,
 );
 
 console.log(
-  `2022-5-2: ${part2(instructions, rows)}`,
+  `2022-5-2: ${part2(instructions, rowsCopy)}`,
 );
