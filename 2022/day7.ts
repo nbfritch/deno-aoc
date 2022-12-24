@@ -1,4 +1,6 @@
-const input = (await Deno.readTextFile('inputs/2022/day7')).split('\n');
+const input = (await Deno.readTextFile('inputs/2022/day7')).split('\n').filter(
+  (x) => x.length > 0,
+);
 
 interface Node {
   name: string;
@@ -29,7 +31,7 @@ const walkTree = (root: Node): Array<{ name: string; size: number }> => {
   }];
 };
 
-const part1 = (puzzle: Array<string>): number => {
+const assembleTree = (puzzle: Array<String>): Node => {
   const root = puzzle[0].replace('$ cd ', '');
   const rootNode: Node = {
     name: root,
@@ -72,6 +74,9 @@ const part1 = (puzzle: Array<string>): number => {
       });
     } else {
       const size = parseInt(parts[0]);
+      if (typeof (size) != 'number') {
+        console.log(`Bad Part ${parts[0]}`);
+      }
       const name = parts[1];
       currentNode.children.push({
         name,
@@ -83,6 +88,11 @@ const part1 = (puzzle: Array<string>): number => {
     }
   }
 
+  return rootNode;
+};
+
+const part1 = (puzzle: Array<string>): number => {
+  const rootNode = assembleTree(puzzle);
   const allNodes = walkTree(rootNode).filter((n) => n.size <= 100000).reduce(
     (acc, i) => acc + i.size,
     0,
@@ -90,4 +100,19 @@ const part1 = (puzzle: Array<string>): number => {
   return allNodes;
 };
 
+const part2 = (puzzle: Array<String>): number => {
+  const totalSystemSpace = 70000000;
+  const requiredFreeSpace = 30000000;
+  const rootNode = assembleTree(puzzle);
+  const usedSpace = sizeOfNode(rootNode);
+
+  const currentFreeSpace = totalSystemSpace - usedSpace;
+  const needFreeSpace = requiredFreeSpace - currentFreeSpace;
+  const nodesWhichCouldBeDeleted = walkTree(rootNode).flatMap((node) =>
+    node.size >= needFreeSpace ? [node.size] : []
+  ).sort((a, b) => a - b);
+  return nodesWhichCouldBeDeleted[0];
+};
+
 console.log(`2022-7-1: ${part1(input)}`);
+console.log(`2022-7-2: ${part2(input)}`);
