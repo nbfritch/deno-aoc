@@ -80,4 +80,53 @@ const part1 = (puzzle: Array<Array<number>>): number => {
   return visibleCount;
 };
 
-console.log(`${part1(input)}`);
+const searchVectors: Array<[number, number]> = [[1, 0], [-1, 0], [0, 1], [
+  0,
+  -1,
+]];
+
+const search = (
+  puzzle: Array<Array<number>>,
+  [dx, dy]: [number, number],
+  [x, y]: [number, number],
+  value: number,
+): number => {
+  let [nx, ny] = [x, y];
+  let c = 0;
+  while (true) {
+    [nx, ny] = [nx + dx, ny + dy];
+    if (nx >= 0 && ny >= 0 && nx < puzzle.length && ny < puzzle.length) {
+      c++;
+      if (puzzle[ny][nx] >= value) break;
+    } else {
+      break;
+    }
+  }
+  return c;
+};
+
+const calculateScore = (
+  puzzle: Array<Array<number>>,
+  ix: number,
+  iy: number,
+): number => {
+  return searchVectors.map((vec) =>
+    search(puzzle, vec, [ix, iy], puzzle[iy][ix])
+  ).reduce((acc, i) => acc * i, 1);
+};
+
+const part2 = (puzzle: Array<Array<number>>): number => {
+  let highestScore = 0;
+  for (let iy = 0; iy < puzzle.length; iy++) {
+    for (let ix = 0; ix < puzzle[iy].length; ix++) {
+      const cellScore = calculateScore(puzzle, ix, iy);
+      if (cellScore > highestScore) {
+        highestScore = cellScore;
+      }
+    }
+  }
+  return highestScore;
+};
+
+console.log(`2022-8-1: ${part1(input)}`);
+console.log(`2022-8-2: ${part2(input)}`);
